@@ -58,8 +58,17 @@ cv::Mat crop_image(cv::Mat image)
         }
     }
 
-    int min_height = 224;
-    int min_width = 224;
+    if(min_row == image.rows || max_row == 0 || min_col == image.cols || max_col == 0)
+        std::cout << "This image is empty" << std::endl;
+
+    std::cout << "Min col: " << min_col << "\tMax col: " << max_col << "\tDiff: " << max_col-min_col << std::endl;
+    std::cout << "Min row: " << min_row << "\tMax row: " << max_row << "\tDiff: " << max_row-min_row << std::endl;
+
+    //max_col++;
+    //max_row++;
+
+    uint min_height = 224; // THIS MUST NOT BE UINT?
+    uint min_width = 224; // THIS MUST NOT BE UINT?
 
     if(max_col-min_col < min_width)
     {
@@ -68,7 +77,12 @@ cv::Mat crop_image(cv::Mat image)
         else if (min_col+min_width < image.cols)
             max_col = min_col+min_width;
         else
-            std::cout << "I should not be here" << std::endl;
+        {
+            std::cout << "Column cropping issue: Emergency mode!" << std::endl;
+            int center = (min_col+max_col)/2;
+            min_col = center - (min_width/2);
+            max_col = center + (min_width/2);
+        }
     }
 
     if(max_row-min_row < min_height)
@@ -78,19 +92,26 @@ cv::Mat crop_image(cv::Mat image)
         else if((max_row-min_height) >= 0)
             min_row = max_row-min_height;
         else
-            std::cout << "I should not be here" << std::endl;
+        {
+            std::cout << "Row cropping issue: Emergency mode!" << std::endl;
+            int center = (min_row+max_row)/2;
+            min_row = center - (min_height/2);
+            max_row = center + (min_height/2);
+        }
     }
 
     int crop_width = max_col - min_col;
     int crop_height = max_row - min_row;
 
 
-    //std::cout << "Min col: " << min_col << "\tMax col: " << max_col << "\tDiff: " << max_col-min_col << std::endl;
-    //std::cout << "Min row: " << min_row << "\tMax row: " << max_row << "\tDiff: " << max_row-min_row << std::endl;
+    std::cout << "Min col: " << min_col << "\tMax col: " << max_col << "\tDiff: " << max_col-min_col << std::endl;
+    std::cout << "Min row: " << min_row << "\tMax row: " << max_row << "\tDiff: " << max_row-min_row << std::endl;
 
     cv::Rect image_roi(min_col, min_row, crop_width, crop_height);
     image = image(image_roi);
 
+    std::cout << "w:" << image.cols << std::endl;
+    std::cout << "h:" << image.rows << std::endl;
     return image;
 }
 
@@ -104,6 +125,7 @@ int main(int argc, char *argv[])
     std::string path_cropped = path + "_cropped";
     std::experimental::filesystem::create_directory(path_cropped);
 
+    int export_index = 0;
     for (const auto & entry : std::experimental::filesystem::directory_iterator(argv[1]))
     {
         std::string path_string = entry.path();
@@ -125,13 +147,18 @@ int main(int argc, char *argv[])
             //int slash_index_file = image_paths[i].find_last_of("\\/")+1;
             //std::cout << image_paths[i].substr(slash_index_file,image_paths[i].length()-slash_index_dir) << std::endl;
             cv::Mat image = cv::imread(image_paths[i], cv::IMREAD_COLOR );
+            std::cout << image_paths[i] << std::endl;
             cv::Mat image_cropped = crop_image(image);
 
             char index_padded[25];
-            sprintf(index_padded, "%05d", i);
+            sprintf(index_padded, "%05d", export_index);
 
+            cv::imshow("Test", image_cropped);
+            cv::waitKey(0);
             std::string image_name = category_dir_cropped+"/image_"+index_padded+".png";
             cv::imwrite(image_name, image_cropped);
+
+            export_index++;
         }
     }
 
