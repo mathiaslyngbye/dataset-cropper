@@ -1,11 +1,14 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(dataset-cropper)
+project(dataset-tools)
 
 
 find_package( OpenCV REQUIRED )
 
 set(DEPENDENCIES ${OpenCV_LIBS})
 
-add_executable(${PROJECT_NAME} "main.cpp")
-target_link_libraries(${PROJECT_NAME} stdc++fs ${DEPENDENCIES})
+add_executable(dataset-cropper "dataset-cropper.cpp")
+target_link_libraries(dataset-cropper stdc++fs ${DEPENDENCIES})
+
+add_executable(dataset-selector "dataset-selector.cpp")
+target_link_libraries(dataset-selector stdc++fs ${DEPENDENCIES})
