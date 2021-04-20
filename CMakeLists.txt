@@ -7,8 +7,8 @@ find_package( OpenCV REQUIRED )
 
 set(DEPENDENCIES ${OpenCV_LIBS})
 
-add_executable(dataset-cropper "dataset-cropper.cpp")
+add_executable(dataset-cropper "src/dataset-cropper.cpp")
 target_link_libraries(dataset-cropper stdc++fs ${DEPENDENCIES})
 
-add_executable(dataset-selector "dataset-selector.cpp")
+add_executable(dataset-selector "src/dataset-selector.cpp")
 target_link_libraries(dataset-selector stdc++fs ${DEPENDENCIES})
