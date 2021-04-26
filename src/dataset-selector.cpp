@@ -132,7 +132,7 @@ void selection_middle(std::vector<cv::Mat> input_images, std::vector<cv::Mat> &o
 {
     output_images.clear();
     int start_index = (input_images.size()/2)-(count/2);
-    std::cout << start_index << std::endl;
+    //std::cout << start_index << std::endl;
     for(int i = start_index; i < count; i++)
         output_images.push_back(input_images[i]);
 }
@@ -219,7 +219,7 @@ void fetch_image_paths(std::string path, std::vector<std::string> &image_paths)
 
 int main(int argc, char *argv[])
 {
-    std::array<std::string,5> types = {"First", "Last", "Middle", "Random", "Best*" };
+    std::array<std::string,5> types = {"first", "last", "middle", "random", "best" };
     // Receive input
     if(argc != 4)
     {
@@ -243,8 +243,13 @@ int main(int argc, char *argv[])
     std::cout << "Selection type: " << arg_type << " (" << types[arg_type] << ")" << std::endl;
     std::cout << "Selection count: " << arg_count << std::endl;
 
+    // Remove last slash
+    char last_char = arg_path[arg_path.length()-1];
+    if(last_char == '/')
+         arg_path = arg_path.substr(0, arg_path.length() - 1);
+
     // Create output directories
-    std::string path_selected = arg_path + "_selection";
+    std::string path_selected = arg_path + "_selection_" + types[arg_type];
     std::experimental::filesystem::create_directory(path_selected);
 
     // Directory iterator
