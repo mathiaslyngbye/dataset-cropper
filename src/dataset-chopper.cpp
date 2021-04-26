@@ -109,12 +109,18 @@ int main(int argc, char *argv[])
     for(int i = 0; i < argc; i++)
         std::cout << "argv[" << i << "] = " << argv[i] << std::endl;
 
-    std::string path(argv[1]);
-    std::string path_chopped = path + "_chopped";
+    std::string arg_path(argv[1]);
+
+    // Remove last slash
+    char last_char = arg_path[arg_path.length()-1];
+    if(last_char == '/')
+         arg_path = arg_path.substr(0, arg_path.length() - 1);
+
+    std::string path_chopped = arg_path + "_chopped";
     std::experimental::filesystem::create_directory(path_chopped);
 
     int export_index = 0;
-    for (const auto & entry : std::experimental::filesystem::directory_iterator(argv[1]))
+    for (const auto & entry : std::experimental::filesystem::directory_iterator(arg_path))
     {
         std::string path_string = entry.path();
 
