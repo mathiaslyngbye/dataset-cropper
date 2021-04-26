@@ -12,3 +12,7 @@ target_link_libraries(dataset-cropper stdc++fs ${DEPENDENCIES})
 
 add_executable(dataset-selector "src/dataset-selector.cpp")
 target_link_libraries(dataset-selector stdc++fs ${DEPENDENCIES})
+
+add_executable(dataset-chopper "src/dataset-chopper.cpp")
+target_link_libraries(dataset-chopper stdc++fs ${DEPENDENCIES})
+
