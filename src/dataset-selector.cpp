@@ -132,8 +132,10 @@ void selection_middle(std::vector<cv::Mat> input_images, std::vector<cv::Mat> &o
 {
     output_images.clear();
     int start_index = (input_images.size()/2)-(count/2);
-    //std::cout << start_index << std::endl;
-    for(int i = start_index; i < count; i++)
+    if(VERBOSE)
+        std::cout << "Start index: " << start_index << std::endl;
+
+    for(int i = start_index; i < start_index+count; i++)
         output_images.push_back(input_images[i]);
 }
 
